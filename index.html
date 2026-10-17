@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NIGHTWAVE TV - Multi-Category Luxury Edition</title>
+  <!-- HLS.js for Streaming m3u8 -->
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* LUXURY VELVET MAROON & GOLD BACKGROUND */
+    body {
+      background-color: #2b050d;
+      background-image: 
+        radial-gradient(circle at 50% 30%, #5e0c1b 0%, #2b050d 70%),
+        repeating-linear-gradient(45deg, rgba(212, 175, 55, 0.05) 0px, rgba(212, 175, 55, 0.05) 2px, transparent 2px, transparent 8px);
+      color: #fff;
+      min-height: 100vh;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Bar Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(180deg, #4a0914 0%, #1c0207 100%);
+      border: 3px solid #d4af37;
+      border-radius: 10px;
+      padding: 12px 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.8), inset 0 1px 3px rgba(255,223,128,0.5);
+    }
+
+    .brand-title {
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, #ffffff 0%, #ffe082 50%, #d4af37 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.9);
+    }
+
+    .manage-btn {
+      background: linear-gradient(180deg, #ffe082 0%, #c49321 100%);
+      color: #1a0500;
+      border: 2px solid #fff;
+      padding: 9px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+      transition: all 0.2s;
+    }
+
+    .manage-btn:hover {
+      filter: brightness(1.2);
+      transform: translateY(-2px);
+    }
+
+    /* APP LAYOUT - ENLARGED PLAYER AREA */
+    .app-layout {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 20px;
+      max-width: 1700px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    @media (max-width: 1100px) {
+      .app-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* LEFT SIDE: ENLARGED PLAYER & WOODEN INFO */
+    .player-section {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .video-card {
+      background: #000;
+      border: 4px solid #d4af37;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.9), inset 0 0 15px rgba(0,0,0,0.8);
+      position: relative;
+    }
+
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      background: #000;
+      aspect-ratio: 16/9;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .live-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: #e60000;
+      color: #fff;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 3px 10px;
+      border-radius: 4px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.8);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      z-index: 5;
+    }
+
+    .live-badge::before {
+      content: '';
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      background: #fff;
+      border-radius: 50%;
+      animation: blink 1s infinite alternate;
+    }
+
+    @keyframes blink {
+      0% { opacity: 0.3; }
+      100% { opacity: 1; }
+    }
+
+    /* REALISTIC MAROON WOOD INFO PANEL */
+    .info-box {
+      background: 
+        repeating-linear-gradient(90deg, rgba(0,0,0,0.08) 0px, rgba(0,0,0,0.08) 2px, transparent 2px, transparent 4px),
+        linear-gradient(180deg, #59111e 0%, #36070f 50%, #1f0207 100%);
+      border: 3px solid #d4af37;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.7), inset 0 2px 4px rgba(255,223,128,0.3);
+    }
+
+    .info-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #ffe082;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      border-bottom: 2px solid #822233;
+      padding-bottom: 6px;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
+    }
+
+    .info-row {
+      font-size: 14px;
+      margin-bottom: 6px;
+      color: #f7d6de;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    }
+
+    .info-row span {
+      color: #d4af37;
+      font-weight: 600;
+    }
+
+    .action-btns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .action-btn {
+      background: linear-gradient(180deg, #f5a838 0%, #b3640e 100%);
+      border: 2px solid #ffe39f;
+      color: #fff;
+      padding: 11px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: center;
+      font-size: 13px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    }
+
+    .action-btn:hover {
+      filter: brightness(1.15);
+    }
+
+    /* RIGHT SIDE: CATEGORIES & CARDS WITH PAGINATION */
+    .channels-section {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .categories-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      background: rgba(43, 5, 13, 0.9);
+      padding: 12px;
+      border-radius: 10px;
+      border: 2px solid #d4af37;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+    }
+
+    .cat-btn {
+      background: linear-gradient(180deg, #59111e 0%, #260309 100%);
+      color: #ffe082;
+      border: 1px solid #a87f28;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .cat-btn.active, .cat-btn:hover {
+      background: linear-gradient(180deg, #ffe082 0%, #c49321 100%);
+      color: #000;
+      border-color: #fff;
+      box-shadow: 0 0 12px rgba(255, 224, 130, 0.8);
+    }
+
+    .channels-container-wrapper {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    /* 3D EMBOSSED GOLD & MAROON CARDS */
+    .channels-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, 150px);
+      gap: 15px;
+      justify-content: start;
+      min-height: 330px;
+    }
+
+    .channel-card {
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle at center, #94182f 0%, #4a0613 70%, #240107 100%);
+      border: 4px solid #d4af37;
+      border-radius: 14px;
+      box-shadow: 
+        inset 0 0 10px rgba(0, 0, 0, 0.9),
+        inset 0 2px 4px rgba(255, 235, 170, 0.8),
+        0 6px 12px rgba(0, 0, 0, 0.8);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 6px 6px 6px;
+      text-align: center;
+      position: relative;
+      transition: transform 0.2s, box-shadow 0.2s;
+      overflow: hidden;
+    }
+
+    .channel-card:hover {
+      transform: translateY(-4px) scale(1.03);
+      border-color: #ffffff;
+      box-shadow: 
+        inset 0 0 12px rgba(0, 0, 0, 0.8),
+        inset 0 2px 6px rgba(255, 255, 255, 0.9),
+        0 10px 20px rgba(0, 0, 0, 0.9),
+        0 0 18px rgba(255, 215, 0, 0.8);
+    }
+
+    .channel-card.active {
+      border-color: #00ffff;
+      box-shadow: 0 0 18px #00ffff, inset 0 0 10px #00ffff;
+    }
+
+    .card-logo-wrapper {
+      width: 100%;
+      height: 95px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .card-logo {
+      max-width: 92%;
+      max-height: 92%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.95));
+    }
+
+    .card-text-logo {
+      font-size: 22px;
+      font-weight: 900;
+      color: #ffffff;
+      text-shadow: 0 3px 6px rgba(0,0,0,0.9), 0 0 10px rgba(212, 175, 55, 0.6);
+      line-height: 1.1;
+    }
+
+    .card-name-bar {
+      width: 100%;
+      background: rgba(15, 1, 4, 0.85);
+      padding: 4px 2px;
+      border-radius: 6px;
+      border-top: 1px solid rgba(212, 175, 55, 0.5);
+    }
+
+    .card-name {
+      font-size: 11px;
+      font-weight: bold;
+      color: #ffe082;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+    }
+
+    /* PAGINATION CONTROLS */
+    .pagination-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(43, 5, 13, 0.9);
+      padding: 10px 15px;
+      border-radius: 8px;
+      border: 2px solid #d4af37;
+      margin-top: 5px;
+    }
+
+    .arrow-btn {
+      background: linear-gradient(180deg, #ffe082 0%, #c49321 100%);
+      color: #000;
+      border: 1px solid #fff;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .arrow-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      filter: grayscale(1);
+    }
+
+    .page-info {
+      color: #ffe082;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    /* ADMIN MODAL PANEL */
+    .modal-overlay {
+      position: fixed;
+      top:0; left:0; right:0; bottom:0;
+      background: rgba(0,0,0,0.88);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .modal-box {
+      background: #2b050d;
+      border: 3px solid #d4af37;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 720px;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.95);
+    }
+
+    .modal-header {
+      padding: 15px;
+      border-bottom: 1px solid #59111e;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #ffe082;
+    }
+
+    /* ADMIN CONTROLS: SEARCH & ADD CATEGORY */
+    .admin-controls-bar {
+      padding: 12px 15px;
+      background: #1c0207;
+      border-bottom: 1px solid #59111e;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .search-input, .cat-add-input {
+      background: #2b050d;
+      border: 1px solid #d4af37;
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      width: 100%;
+    }
+
+    .add-cat-box {
+      display: flex;
+      gap: 8px;
+    }
+
+    .add-cat-btn {
+      background: #d4af37;
+      color: #000;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .modal-body {
+      padding: 15px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .channel-input-group {
+      background: #420a16;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #822233;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .channel-input-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .channel-input-header label {
+      font-size: 13px;
+      color: #ffe082;
+      font-weight: bold;
+    }
+
+    .delete-btn {
+      background: #a31c1c;
+      color: white;
+      border: none;
+      padding: 3px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 11px;
+    }
+
+    .channel-input-group input {
+      background: #1c0207;
+      border: 1px solid #a87f28;
+      color: #fff;
+      padding: 8px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    .categories-checkbox-group {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      background: #1c0207;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #a87f28;
+    }
+
+    .categories-checkbox-group label {
+      font-size: 11px;
+      color: #ffd700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .add-more-btn {
+      background: linear-gradient(180deg, #28a745 0%, #1e7e34 100%);
+      color: white;
+      border: 1px solid #5cb85c;
+      padding: 10px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      margin-top: 5px;
+    }
+
+    .modal-footer {
+      padding: 15px;
+      border-top: 1px solid #59111e;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .btn-save {
+      background: #d4af37;
+      color: black;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn-close {
+      background: #6c757d;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    footer {
+      margin-top: auto;
+      text-align: center;
+      padding: 20px 0 10px 0;
+      color: #ffe082;
+      font-weight: bold;
+      font-size: 13px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="brand-title">NIGHTWAVE TV</div>
+    <button class="manage-btn" onclick="openModal()">⚙️ Add Links & Logos</button>
+  </header>
+
+  <!-- Layout -->
+  <div class="app-layout">
+    
+    <!-- LEFT: Player & Info -->
+    <div class="player-section">
+      <div class="video-card">
+        <div class="live-badge">LIVE</div>
+        <div class="video-wrapper">
+          <video id="videoPlayer" controls autoplay muted></video>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <div class="info-title" id="infoChannelName">WILLOW SPORTS | IPL LIVE MATCH</div>
+        <div class="info-row"><span>Source:</span> <strong id="infoSource" style="color:#fff;">Willow Sports</strong></div>
+        <div class="info-row"><span>Details:</span> Live IPTV HD Stream</div>
+        <div class="info-row"><span>Quality:</span> High Quality 1080p / Auto</div>
+
+        <div class="action-btns">
+          <button class="action-btn" onclick="toggleFullscreen()">📺 Enlarge / Fullscreen</button>
+          <button class="action-btn" onclick="reloadStream()">🔄 Refresh Stream</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Categories & Channels -->
+    <div class="channels-section">
+      <!-- DYNAMIC CATEGORIES BAR -->
+      <div class="categories-bar" id="categoriesBar">
+        <!-- Rendered via JS -->
+      </div>
+
+      <div class="channels-container-wrapper">
+        <div class="channels-grid" id="channelsGrid">
+          <!-- Rendered via JS -->
+        </div>
+
+        <!-- PAGINATION ARROWS CONTROLS -->
+        <div class="pagination-controls" id="paginationControls">
+          <button class="arrow-btn" id="prevBtn" onclick="changePage(-1)">◀ Previous</button>
+          <span class="page-info" id="pageIndicator">Page 1 of 1</span>
+          <button class="arrow-btn" id="nextBtn" onclick="changePage(1)">Next ▶</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    NIGHTWAVE TV &copy; IPTVBDN Entertainment || 2026
+  </footer>
+
+  <!-- Admin Modal -->
+  <div class="modal-overlay" id="linkModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>⚙️ Admin Panel - Channel Management</h3>
+        <span style="cursor:pointer;" onclick="closeModal()">✖</span>
+      </div>
+
+      <!-- ADMIN SEARCH & CATEGORY CREATION BAR -->
+      <div class="admin-controls-bar">
+        <input type="text" id="adminSearchInput" class="search-input" placeholder="🔍 Search channel name..." oninput="renderModalInputs()">
+        
+        <div class="add-cat-box">
+          <input type="text" id="newCategoryInput" class="cat-add-input" placeholder="Enter new category name (e.g. CRICKET)">
+          <button class="add-cat-btn" onclick="addNewCategory()">➕ Add Category</button>
+        </div>
+      </div>
+
+      <div class="modal-body" id="modalInputs">
+        <!-- Dynamic Input Rows -->
+      </div>
+      <div style="padding: 0 15px;">
+        <button class="add-more-btn" onclick="addNewSlot()">➕ Add New Channel Slot</button>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-close" onclick="closeModal()">Cancel</button>
+        <button class="btn-save" onclick="saveChannels()">Save & Apply Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Categories Management
+    const defaultCategories = ['SPORTS', 'NEWS', 'BANGLA', 'HINDI', 'MOVIES', 'MUSIC', 'DOCUMENTARY', 'KIDS'];
+    let allCategories = JSON.parse(localStorage.getItem('nightwave_categories')) || defaultCategories;
+
+    let defaultChannels = [
+      { id: 1, name: "LIVE 1", categories: ["SPORTS", "BANGLA"], m3u8: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8", logo: "", textLogo: "LIVE 1" },
+      { id: 2, name: "Somoy News", categories: ["NEWS", "BANGLA"], m3u8: "", logo: "", textLogo: "NEWS" },
+      { id: 3, name: "Star Sports", categories: ["SPORTS", "HINDI"], m3u8: "", logo: "", textLogo: "★" },
+      { id: 4, name: "Gaan Bangla", categories: ["MUSIC", "BANGLA"], m3u8: "", logo: "", textLogo: "MUSIC" }
+    ];
+
+    let channels = JSON.parse(localStorage.getItem('nightwave_channels')) || defaultChannels;
+    let currentCategory = 'ALL';
+    let currentActiveId = channels.length > 0 ? channels[0].id : 1;
+
+    // Pagination State (20 items per page)
+    let currentPage = 1;
+    const itemsPerPage = 20;
+
+    const video = document.getElementById('videoPlayer');
+    let hls = new Hls();
+
+    function renderCategoryButtons() {
+      const bar = document.getElementById('categoriesBar');
+      bar.innerHTML = `<button class="cat-btn ${currentCategory === 'ALL' ? 'active' : ''}" onclick="filterCategory('ALL')">ALL CHANNEL</button>`;
+
+      allCategories.forEach(cat => {
+        const isActive = currentCategory === cat ? 'active' : '';
+        bar.innerHTML += `<button class="cat-btn ${isActive}" onclick="filterCategory('${cat}')">${cat}</button>`;
+      });
+    }
+
+    function renderChannels() {
+      const grid = document.getElementById('channelsGrid');
+      grid.innerHTML = '';
+
+      const filtered = currentCategory === 'ALL' 
+        ? channels 
+        : channels.filter(c => c.categories && c.categories.includes(currentCategory));
+
+      // Calculate Pagination
+      const totalPages = Math.ceil(filtered.length / itemsPerPage) || 1;
+      if (currentPage > totalPages) currentPage = totalPages;
+
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const paginatedChannels = filtered.slice(startIndex, startIndex + itemsPerPage);
+
+      paginatedChannels.forEach(ch => {
+        const card = document.createElement('div');
+        card.className = `channel-card ${ch.id === currentActiveId ? 'active' : ''}`;
+        card.onclick = () => playChannel(ch);
+
+        let logoContent = ch.logo 
+          ? `<div class="card-logo-wrapper"><img src="${ch.logo}" class="card-logo" alt="${ch.name}"></div>` 
+          : `<div class="card-logo-wrapper"><div class="card-text-logo">${ch.textLogo || ch.name}</div></div>`;
+
+        card.innerHTML = `
+          ${logoContent}
+          <div class="card-name-bar">
+            <div class="card-name">${ch.name}</div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+
+      // Update Pagination UI
+      document.getElementById('pageIndicator').innerText = `Page ${currentPage} of ${totalPages}`;
+      document.getElementById('prevBtn').disabled = (currentPage === 1);
+      document.getElementById('nextBtn').disabled = (currentPage === totalPages);
+
+      // Hide arrows if total channels are 20 or less
+      const navControls = document.getElementById('paginationControls');
+      if (filtered.length <= itemsPerPage) {
+        navControls.style.display = 'none';
+      } else {
+        navControls.style.display = 'flex';
+      }
+    }
+
+    function changePage(direction) {
+      currentPage += direction;
+      renderChannels();
+    }
+
+    function playChannel(ch) {
+      currentActiveId = ch.id;
+      document.getElementById('infoChannelName').innerText = ch.name;
+      document.getElementById('infoSource').innerText = ch.m3u8 ? ch.name : "No M3U8 Link Provided";
+
+      renderChannels();
+
+      if (!ch.m3u8) {
+        alert("এই চ্যানেলের m3u8 লিংকটি যুক্ত করা হয়নি। অ্যাডমিন প্যানেল থেকে লিংক দিন।");
+        return;
+      }
+
+      if (Hls.isSupported()) {
+        hls.destroy();
+        hls = new Hls();
+        hls.loadSource(ch.m3u8);
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED, function() {
+          video.play().catch(e => console.log("Autoplay blocked:", e));
+        });
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = ch.m3u8;
+        video.play();
+      }
+    }
+
+    function filterCategory(cat) {
+      currentCategory = cat;
+      currentPage = 1; // Reset to page 1 on category change
+      renderCategoryButtons();
+      renderChannels();
+    }
+
+    function toggleFullscreen() {
+      if (video.requestFullscreen) video.requestFullscreen();
+      else if (video.webkitRequestFullscreen) video.webkitRequestFullscreen();
+      else if (video.msRequestFullscreen) video.msRequestFullscreen();
+    }
+
+    function reloadStream() {
+      const active = channels.find(c => c.id === currentActiveId);
+      if (active) playChannel(active);
+    }
+
+    /* Admin Modal Logic */
+    function openModal() {
+      renderModalInputs();
+      document.getElementById('linkModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('linkModal').style.display = 'none';
+    }
+
+    // Temporary save state of modal input fields before modifying structure
+    function syncCurrentModalInputs() {
+      channels.forEach(ch => {
+        const nameInput = document.getElementById(`name_${ch.id}`);
+        const m3u8Input = document.getElementById(`m3u8_${ch.id}`);
+        const logoInput = document.getElementById(`logo_${ch.id}`);
+
+        if (nameInput) ch.name = nameInput.value;
+        if (m3u8Input) ch.m3u8 = m3u8Input.value;
+        if (logoInput) ch.logo = logoInput.value;
+
+        const selectedCats = [];
+        const checkboxes = document.querySelectorAll(`.cat_checkbox_${ch.id}:checked`);
+        if (checkboxes.length > 0) {
+          checkboxes.forEach(cb => selectedCats.push(cb.value));
+          ch.categories = selectedCats;
+        }
+      });
+    }
+
+    function renderModalInputs() {
+      const container = document.getElementById('modalInputs');
+      const searchQuery = (document.getElementById('adminSearchInput')?.value || '').toLowerCase().trim();
+      container.innerHTML = '';
+
+      channels.forEach((ch, idx) => {
+        if (!ch.categories) ch.categories = [];
+
+        // Apply Search Filter
+        if (searchQuery && !ch.name.toLowerCase().includes(searchQuery)) {
+          return;
+        }
+
+        const group = document.createElement('div');
+        group.className = 'channel-input-group';
+        group.id = `group_${ch.id}`;
+
+        let checkboxesHTML = '';
+        allCategories.forEach(cat => {
+          const isChecked = ch.categories.includes(cat) ? 'checked' : '';
+          checkboxesHTML += `
+            <label>
+              <input type="checkbox" class="cat_checkbox_${ch.id}" value="${cat}" ${isChecked}> ${cat}
+            </label>
+          `;
+        });
+
+        group.innerHTML = `
+          <div class="channel-input-header">
+            <label>Slot #${idx + 1}: Channel Management</label>
+            <button class="delete-btn" onclick="removeSlot(${ch.id})">🗑️ Delete Slot</button>
+          </div>
+          <input type="text" id="name_${ch.id}" value="${ch.name}" placeholder="Channel Name">
+          <input type="text" id="m3u8_${ch.id}" value="${ch.m3u8 || ''}" placeholder="Enter M3U8 Stream Link">
+          <input type="text" id="logo_${ch.id}" value="${ch.logo || ''}" placeholder="Enter Logo Image URL (PNG Direct Link)">
+          <label style="font-size:12px; color:#ffd700; font-weight:bold; margin-top:4px;">Select Categories (Multiple Allowed):</label>
+          <div class="categories-checkbox-group">
+            ${checkboxesHTML}
+          </div>
+        `;
+        container.appendChild(group);
+      });
+    }
+
+    function addNewCategory() {
+      const input = document.getElementById('newCategoryInput');
+      const catName = input.value.trim().toUpperCase();
+
+      if (!catName) {
+        alert("ক্যাটাগরির নাম লিখুন!");
+        return;
+      }
+
+      if (allCategories.includes(catName)) {
+        alert("এই ক্যাটাগরি ইতিমধ্যে রয়েছে!");
+        return;
+      }
+
+      syncCurrentModalInputs();
+      allCategories.push(catName);
+      localStorage.setItem('nightwave_categories', JSON.stringify(allCategories));
+      input.value = '';
+      
+      renderCategoryButtons();
+      renderModalInputs();
+      alert(`নতুন ক্যাটাগরি '${catName}' যুক্ত করা হয়েছে!`);
+    }
+
+    function addNewSlot() {
+      syncCurrentModalInputs(); // Save existing values before adding new slot
+      
+      const newId = Date.now();
+      channels.push({
+        id: newId,
+        name: `Channel ${channels.length + 1}`,
+        categories: ["SPORTS"],
+        m3u8: "",
+        logo: "",
+        textLogo: "TV"
+      });
+      
+      renderModalInputs();
+      const body = document.getElementById('modalInputs');
+      body.scrollTop = body.scrollHeight;
+    }
+
+    function removeSlot(id) {
+      if (channels.length <= 1) {
+        alert("কমপক্ষে একটি চ্যানেল থাকতে হবে!");
+        return;
+      }
+      syncCurrentModalInputs();
+      channels = channels.filter(c => c.id !== id);
+      renderModalInputs();
+    }
+
+    function saveChannels() {
+      syncCurrentModalInputs();
+
+      localStorage.setItem('nightwave_channels', JSON.stringify(channels));
+      closeModal();
+      renderChannels();
+      alert("সফলভাবে সমস্ত চ্যানেল, মাল্টি-ক্যাটাগরি এবং লিঙ্ক আপডেট করা হয়েছে!");
+    }
+
+    // Initializations
+    renderCategoryButtons();
+    renderChannels();
+    if (channels.length > 0) playChannel(channels[0]);
+  </script>
+</body>
+</html>
